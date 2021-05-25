@@ -11,6 +11,7 @@ public class KDTreeTest {
         NDVector<Double>[] data = buildRandomData(SCALE, DIMENSIONS);
         KDTree tree = KDTree.buildTree(data);
         System.out.printf("Tree depth: %d\n",tree.getDepth());
+        double avgTime = 0;
         for(int x = 0; x < TRIALS; x++) {
             NDVector<Double> probe = randomProbe(DIMENSIONS);
             long st = System.nanoTime();
@@ -20,9 +21,10 @@ public class KDTreeTest {
                 passed = false;
                 break;
             }
-            System.out.printf("Case Done: %f ms.; %s\n",(et-st)/1e6, sr.second);
+           // System.out.printf("Case Done: %f ms.; %s\n",(et-st)/1e6, sr.second);
+            avgTime += (et-st)/1e6;
         }
-        System.out.println("Test done; " + (passed ? "PASSED." : "NOT PASSED.") );
+        System.out.println("Test done; " + (passed ? "PASSED." : "NOT PASSED.") + " Avg. time is "+avgTime/TRIALS+" ms.");
     }
     NDVector<Double> randomProbe(int dimensions) {
         Random r = new Random();
