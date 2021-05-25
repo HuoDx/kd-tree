@@ -19,15 +19,15 @@ public class KDTree {
     public int getDepth() {
         return probeDepth(root);
     }
-    public static KDTree buildTree(NDVector<Double>[] data) {
+    public static KDTree buildTree(NDVector[] data) {
         return new KDTree(build(Arrays.asList(data),0));
     }
 
-    private static KDTreeNode build(List<NDVector<Double>> data, int dimensionFocus) {
+    private static KDTreeNode build(List<NDVector> data, int dimensionFocus) {
         if(data.size() < 1) return null;
-        data.sort( new Comparator<NDVector<Double>>() {
+        data.sort( new Comparator<NDVector>() {
             @Override
-            public int compare(NDVector<Double> o1, NDVector<Double> o2) {
+            public int compare(NDVector o1, NDVector o2) {
                 if(o1.data == null && o2.data == null) return 0;
                 if(o1.data == null) return -1;
                 if(o2.data == null) return 1;
@@ -41,7 +41,7 @@ public class KDTree {
         return node;
     }
 
-    public Pair<Double, NDVector<Double>> search (NDVector<Double> queryPosition) {
+    public Pair<Double, NDVector> search (NDVector queryPosition) {
         return search(this.root, queryPosition);
     }
     /**
@@ -50,22 +50,22 @@ public class KDTree {
      * @param queryPosition
      * @return
      */
-    private Pair<Double, NDVector<Double>> search(KDTreeNode node, NDVector<Double> queryPosition) {
-        if(node == null) return new Pair<Double, NDVector<Double>>(Double.MAX_VALUE, null);
-        if(node.leftChild == null && node.rightChild == null) return new Pair<Double, NDVector<Double>>(node.vector.distanceTo(queryPosition), (NDVector<Double>) node.vector);
+    private Pair<Double, NDVector> search(KDTreeNode node, NDVector queryPosition) {
+        if(node == null) return new Pair<Double, NDVector>(Double.MAX_VALUE, null);
+        if(node.leftChild == null && node.rightChild == null) return new Pair<Double, NDVector>(node.vector.distanceTo(queryPosition), (NDVector) node.vector);
 
         double minimalDistance = Double.MAX_VALUE;
         double radius = Double.MAX_VALUE;
         boolean leftChildChosen = false;
-        NDVector<Double> closerNode;
+        NDVector closerNode;
 
-        if(queryPosition.data[node.dimensionFocus].doubleValue() > node.vector.data[node.dimensionFocus].doubleValue() && node.rightChild != null) {
-            Pair<Double, NDVector<Double>> queryResult = search(node.rightChild, queryPosition);
+        if(queryPosition.data[node.dimensionFocus] > node.vector.data[node.dimensionFocus] && node.rightChild != null) {
+            Pair<Double, NDVector> queryResult = search(node.rightChild, queryPosition);
             radius = queryResult.first;
             closerNode = queryResult.second;
 
         } else {
-            Pair<Double, NDVector<Double>> queryResult = search(node.leftChild, queryPosition);
+            Pair<Double, NDVector> queryResult = search(node.leftChild, queryPosition);
             radius = search(node.leftChild, queryPosition).first;
             closerNode = queryResult.second;
 
@@ -74,8 +74,8 @@ public class KDTree {
 
         minimalDistance = radius;
 
-        if( radius >= Math.abs(queryPosition.data[node.dimensionFocus].doubleValue() - node.vector.data[node.dimensionFocus].doubleValue())) {
-            Pair<Double, NDVector<Double>> queryResult = search(leftChildChosen ? node.rightChild : node.leftChild, queryPosition);
+        if( radius >= Math.abs(queryPosition.data[node.dimensionFocus] - node.vector.data[node.dimensionFocus])) {
+            Pair<Double, NDVector> queryResult = search(leftChildChosen ? node.rightChild : node.leftChild, queryPosition);
             minimalDistance = queryResult.first;
             closerNode = queryResult.second;
             minimalDistance = minimalDistance > radius ? radius : minimalDistance;
@@ -83,6 +83,6 @@ public class KDTree {
 
         double selfDistance = node.vector.distanceTo(queryPosition);
 
-        return minimalDistance < selfDistance ? new Pair<>(minimalDistance, closerNode) : new Pair<>(selfDistance, (NDVector<Double>) node.vector);
+        return minimalDistance < selfDistance ? new Pair<>(minimalDistance, closerNode) : new Pair<>(selfDistance, (NDVector) node.vector);
     }
 }

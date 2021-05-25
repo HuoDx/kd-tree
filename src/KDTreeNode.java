@@ -1,8 +1,8 @@
 public class KDTreeNode {
     public KDTreeNode leftChild, rightChild;
-    public NDVector<?> vector;
+    public NDVector vector;
     public int dimensionFocus;
-    public KDTreeNode(NDVector<?> vector, int dimensionFocus) {
+    public KDTreeNode(NDVector vector, int dimensionFocus) {
         this.vector = vector;
         this.dimensionFocus = dimensionFocus;
     }

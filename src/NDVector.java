@@ -1,8 +1,8 @@
 import java.lang.Double;
-public class NDVector<T extends Number> {
-    T[] data;
+public class NDVector {
+    double[] data;
     int dimensions;
-    public NDVector(T[] data) {
+    public NDVector(double[] data) {
         this.dimensions = data.length;
         this.data = data;
     }
@@ -11,7 +11,7 @@ public class NDVector<T extends Number> {
         if(other.dimensions != this.dimensions) throw new IllegalArgumentException("dimensions mismatch.");
         double ans = 0;
         for(int i = 0; i < dimensions; i++) {
-            ans += Math.pow(this.data[i].doubleValue() -  other.data[i].doubleValue(), 2);
+            ans += (this.data[i] -  other.data[i]) * (this.data[i] -  other.data[i]);
         }
         return ans;
 
