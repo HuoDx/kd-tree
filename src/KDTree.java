@@ -74,7 +74,8 @@ public class KDTree {
 
         minimalDistance = radius;
 
-        if( radius >= Math.abs(queryPosition.data[node.dimensionFocus] - node.vector.data[node.dimensionFocus])) {
+        if( Math.sqrt(radius) >= Math.abs(queryPosition.data[node.dimensionFocus] - node.vector.data[node.dimensionFocus])) {
+
             Pair<Double, NDVector> queryResult = search(leftChildChosen ? node.rightChild : node.leftChild, queryPosition);
             minimalDistance = queryResult.first;
             closerNode = queryResult.second;

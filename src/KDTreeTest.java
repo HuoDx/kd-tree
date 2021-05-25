@@ -3,8 +3,8 @@ import java.util.Random;
 
 public class KDTreeTest {
     public KDTreeTest() {
-        final int SCALE = 1<<16, DIMENSIONS = 9;
-        final int TRIALS = 128;
+        final int SCALE = 1<<16-1, DIMENSIONS = 16;
+        final int TRIALS = 256;
         boolean passed = true;
         System.out.println("Testing...");
 
@@ -21,8 +21,13 @@ public class KDTreeTest {
                 passed = false;
                 break;
             }
-            avgTime += (et-st)/1e6;
+            double treeMethod = (et-st)/1e6;
+            avgTime += treeMethod;
             //System.out.printf("Case Done: %f ms.; %s\n",, sr.second);
+            st = System.nanoTime();
+            minDistance(data, probe);
+            et = System.nanoTime();
+            System.out.printf("Improved %f ms.\n",(((et-st)/1e6) - treeMethod));
         }
         System.out.println("Test done; " + (passed ? "PASSED." : "NOT PASSED.") + " Avg. time is "+avgTime/TRIALS+" ms." );
     }
